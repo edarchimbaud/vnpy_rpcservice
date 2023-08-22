@@ -7,7 +7,7 @@ from vnpy.trader.object import (
     SubscribeRequest,
     HistoryRequest,
     CancelRequest,
-    OrderRequest
+    OrderRequest,
 )
 from vnpy.trader.constant import Exchange
 from vnpy.trader.object import (
@@ -16,7 +16,7 @@ from vnpy.trader.object import (
     AccountData,
     PositionData,
     OrderData,
-    TradeData
+    TradeData,
 )
 
 
@@ -28,14 +28,14 @@ class RpcGateway(BaseGateway):
     default_name: str = "RPC"
 
     default_setting: Dict[str, str] = {
-        "主动请求地址": "tcp://127.0.0.1:2014",
-        "推送订阅地址": "tcp://127.0.0.1:4102"
+        "Request address": "tcp://127.0.0.1:2014",
+        "Subscription address": "tcp://127.0.0.1:4102",
     }
 
     exchanges: List[Exchange] = list(Exchange)
 
     def __init__(self, event_engine, gateway_name: str) -> None:
-        """构造函数"""
+        """Constructor"""
         super().__init__(event_engine, gateway_name)
 
         self.symbol_gateway_map: Dict[str, str] = {}
@@ -44,24 +44,24 @@ class RpcGateway(BaseGateway):
         self.client.callback = self.client_callback
 
     def connect(self, setting: dict) -> None:
-        """连接交易接口"""
-        req_address: str = setting["主动请求地址"]
-        pub_address: str = setting["推送订阅地址"]
+        """Connect trading interface"""
+        req_address: str = setting["Request address"]
+        pub_address: str = setting["Subscription address"]
 
         self.client.subscribe_topic("")
         self.client.start(req_address, pub_address)
 
-        self.write_log("服务器连接成功，开始初始化查询")
+        self.write_log("Server connection successful, starting initialization query")
 
         self.query_all()
 
     def subscribe(self, req: SubscribeRequest) -> None:
-        """订阅行情"""
+        """Subscribe to Quotes"""
         gateway_name: str = self.symbol_gateway_map.get(req.vt_symbol, "")
         self.client.subscribe(req, gateway_name)
 
     def send_order(self, req: OrderRequest) -> str:
-        """委托下单"""
+        """Place an order"""
         gateway_name: str = self.symbol_gateway_map.get(req.vt_symbol, "")
         gateway_orderid: str = self.client.send_order(req, gateway_name)
 
@@ -72,67 +72,67 @@ class RpcGateway(BaseGateway):
             return gateway_orderid
 
     def cancel_order(self, req: CancelRequest) -> None:
-        """委托撤单"""
+        """Order cancellation"""
         gateway_name: str = self.symbol_gateway_map.get(req.vt_symbol, "")
         self.client.cancel_order(req, gateway_name)
 
     def query_account(self) -> None:
-        """查询资金"""
+        """Inquiry funds"""
         pass
 
     def query_position(self) -> None:
-        """查询持仓"""
+        """Check position"""
         pass
 
     def query_history(self, req: HistoryRequest) -> List[BarData]:
-        """查询历史数据"""
+        """Query historical data"""
         gateway_name: str = self.symbol_gateway_map.get(req.vt_symbol, "")
         return self.client.query_history(req, gateway_name)
 
     def query_all(self) -> None:
-        """查询基础信息"""
+        """Search for basic information"""
         contracts: List[ContractData] = self.client.get_all_contracts()
         for contract in contracts:
             self.symbol_gateway_map[contract.vt_symbol] = contract.gateway_name
             contract.gateway_name = self.gateway_name
             self.on_contract(contract)
-        self.write_log("合约信息查询成功")
+        self.write_log("Successful contract information inquiry")
 
         accounts: List[AccountData] = self.client.get_all_accounts()
         for account in accounts:
             account.gateway_name = self.gateway_name
             account.__post_init__()
             self.on_account(account)
-        self.write_log("资金信息查询成功")
+        self.write_log("Funding information query successful")
 
         positions: List[PositionData] = self.client.get_all_positions()
         for position in positions:
             position.gateway_name = self.gateway_name
             position.__post_init__()
             self.on_position(position)
-        self.write_log("持仓信息查询成功")
+        self.write_log("Position information query successful")
 
         orders: List[OrderData] = self.client.get_all_orders()
         for order in orders:
             order.gateway_name = self.gateway_name
             order.__post_init__()
             self.on_order(order)
-        self.write_log("委托信息查询成功")
+        self.write_log("Order information query successful")
 
         trades: List[TradeData] = self.client.get_all_trades()
         for trade in trades:
             trade.gateway_name = self.gateway_name
             trade.__post_init__()
             self.on_trade(trade)
-        self.write_log("成交信息查询成功")
+        self.write_log("Successful trade information query")
 
     def close(self) -> None:
-        """关闭连接"""
+        """Close connection"""
         self.client.stop()
         self.client.join()
 
     def client_callback(self, topic: str, event: Event) -> None:
-        """回调函数"""
+        """Callback function"""
         if event is None:
             print("none event", topic, event)
             return
