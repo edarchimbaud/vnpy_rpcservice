@@ -1,4 +1,4 @@
-# VeighNa框架的RPC服务应用
+# VeighNa Framework for RPC Service Applications
 
 <p align="center">
   <img src ="https://vnpy.oss-cn-shanghai.aliyuncs.com/vnpy-logo.png"/>
@@ -11,22 +11,22 @@
     <img src ="https://img.shields.io/github/license/vnpy/vnpy.svg?color=orange"/>
 </p>
 
-## 说明
+## Description
 
-基于pyzmq开发的RPC服务模块，允许将某一VeighNa进程启动为服务端，作为统一的行情和交易路由通道，允许多客户端同时连接，实现实现跨进程或者跨网络的分布式系统。
+RPC service module developed based on pyzmq, allows a VeighNa process to be started as a server, as a unified quotation and trading routing channel, allowing multiple clients to connect at the same time, to achieve the realization of cross-process or cross-network distributed system.
 
-## 安装
+## Installation
 
-安装环境推荐基于3.0.0版本以上的【[**VeighNa Studio**](https://edarchimbaud.com/veighna-website)】。
+The installation environment is recommended to be based on [[**VeighNa Studio**](https://github.com/paperswithbacktest/vnpy)], version 3.0.0 or higher.
 
-直接使用pip命令：
+Use pip command directly:
 
 ```
 pip install vnpy_rpcservice
 ```
 
 
-或者下载源代码后，解压后在cmd中运行：
+Or download the source code, unzip it and run it in cmd:
 
 ```
 pip install .
