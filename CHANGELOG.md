@@ -1,16 +1,16 @@
-# 1.0.4版本
+# Version 1.0.4
 
-1. 修复vt_相关带有gateway_name字段的错误问题
+1. fix vt_related bug with gateway_name field
 
-# 1.0.3版本
+# 1.0.3 version
 
-1. 移除服务端的EVENT_TIMER定时事件推送
+1. Remove EVENT_TIMER timer push on server side.
 
-# 1.0.2版本
+# 1.0.2 release
 
-1. 添加变量类型声明
+1. Add variable type declaration
 
-# 1.0.1版本
+# 1.0.1 Version
 
-1. 将模块的图标文件信息，改为完整路径字符串
-2. 调整接口初始化时，接口名称的赋值方式
+1. change the icon file information of the module to full path string.
+2. adjust the way of assigning interface name when initializing interface

@@ -22,7 +22,7 @@ from vnpy.trader.object import (
 
 class RpcGateway(BaseGateway):
     """
-    VeighNa用于连接rpc服务的接口。
+    The interface that VeighNa uses to connect to the rpc service.
     """
 
     default_name: str = "RPC"
